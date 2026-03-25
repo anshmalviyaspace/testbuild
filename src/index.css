@@ -88,3 +88,43 @@
     background: hsl(var(--muted-foreground));
   }
 }
+
+@layer utilities {
+  .text-gradient-primary {
+    background: linear-gradient(135deg, #00e5a0, #0066ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, hsl(var(--primary) / 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--primary) / 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .bg-radial-glow {
+    background: radial-gradient(ellipse 50% 50% at 50% 40%, hsl(var(--primary) / 0.12) 0%, transparent 70%);
+  }
+
+  .bg-radial-glow-strong {
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, hsl(var(--primary) / 0.15) 0%, transparent 70%);
+  }
+
+  .card-hover-glow {
+    @apply transition-all duration-300;
+  }
+  .card-hover-glow:hover {
+    border-color: hsl(var(--primary) / 0.4);
+    box-shadow: 0 0 20px -4px hsl(var(--primary) / 0.15), inset 0 1px 0 hsl(var(--primary) / 0.1);
+    transform: translateY(-2px);
+  }
+
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+  .stagger-6 { animation-delay: 0.6s; }
+}
