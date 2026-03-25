@@ -169,7 +169,14 @@ export default function ModuleDetail({
             </div>
 
             <button
-              onClick={() => navigate("/dashboard/projects")}
+              onClick={() =>
+                navigate("/dashboard/projects", {
+                  state: {
+                    prefillTitle: module.projectBrief!.title,
+                    prefillDescription: module.projectBrief!.description,
+                  },
+                })
+              }
               className="flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors"
             >
               Start This Project <ArrowRight size={14} />
