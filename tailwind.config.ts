@@ -31,6 +31,14 @@ export default {
         foreground: "hsl(var(--foreground))",
         surface: "hsl(var(--surface))",
         surface2: "hsl(var(--surface2))",
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        streak: {
+          DEFAULT: "hsl(var(--streak))",
+          foreground: "hsl(var(--streak-foreground))",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
