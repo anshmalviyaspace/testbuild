@@ -9,11 +9,22 @@ export interface User {
   xpPoints: number;
   streakDays: number;
   avatarInitials: string;
+  bio?: string;
+  email?: string;
+}
+
+export interface SignupData {
+  fullName: string;
+  college: string;
+  email: string;
+  password: string;
 }
 
 interface AuthContextType {
   currentUser: User | null;
+  signupData: SignupData | null;
   isAuthenticated: boolean;
+  setSignupData: (data: SignupData) => void;
   login: (user: User) => void;
   logout: () => void;
 }
@@ -33,12 +44,24 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(defaultUser);
+  const [signupData, setSignupDataState] = useState<SignupData | null>(null);
 
-  const login = (user: User) => setCurrentUser(user);
-  const logout = () => setCurrentUser(null);
+  const setSignupData = (data: SignupData) => setSignupDataState(data);
+
+  const login = (user: User) => {
+    setCurrentUser(user);
+    localStorage.setItem("buildhub_user", JSON.stringify(user));
+  };
+
+  const logout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem("buildhub_user");
+  };
 
   return (
-    <AuthContext.Provider value={{ currentUser, isAuthenticated: !!currentUser, login, logout }}>
+    <AuthContext.Provider
+      value={{ currentUser, signupData, isAuthenticated: !!currentUser, setSignupData, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
