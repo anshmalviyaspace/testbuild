@@ -1,12 +1,15 @@
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, CheckCircle2 } from "lucide-react";
 
 interface Props {
   moduleName: string;
+  uncheckedCount: number;
   onConfirm: () => void;
   onCancel: () => void;
 }
 
-export default function CompletionModal({ moduleName, onConfirm, onCancel }: Props) {
+export default function CompletionModal({ moduleName, uncheckedCount, onConfirm, onCancel }: Props) {
+  const hasUnchecked = uncheckedCount > 0;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onCancel}>
       <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
@@ -15,15 +18,29 @@ export default function CompletionModal({ moduleName, onConfirm, onCancel }: Pro
         className="relative w-full max-w-sm bg-card border border-border rounded-xl p-6 space-y-5 animate-scale-in"
       >
         <div className="flex items-start gap-3">
-          <div className="w-9 h-9 rounded-lg bg-warning/10 flex items-center justify-center shrink-0">
-            <AlertTriangle size={18} className="text-warning" />
+          <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${hasUnchecked ? "bg-warning/10" : "bg-primary/10"}`}>
+            {hasUnchecked ? (
+              <AlertTriangle size={18} className="text-warning" />
+            ) : (
+              <CheckCircle2 size={18} className="text-primary" />
+            )}
           </div>
           <div>
-            <h3 className="font-heading font-bold text-lg">Ready to move on?</h3>
+            <h3 className="font-heading font-bold text-lg">
+              {hasUnchecked ? "Are you sure?" : "Ready to move on?"}
+            </h3>
             <p className="text-sm text-muted-foreground mt-1">
-              Make sure you've gone through all resources in{" "}
-              <span className="text-foreground font-medium">"{moduleName}"</span> before marking
-              it complete.
+              {hasUnchecked ? (
+                <>
+                  You have <span className="text-foreground font-medium">{uncheckedCount} resource{uncheckedCount > 1 ? "s" : ""}</span> left in{" "}
+                  <span className="text-foreground font-medium">"{moduleName}"</span>. Sure you want to continue?
+                </>
+              ) : (
+                <>
+                  All resources reviewed in{" "}
+                  <span className="text-foreground font-medium">"{moduleName}"</span>. Nice work!
+                </>
+              )}
             </p>
           </div>
         </div>
