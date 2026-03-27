@@ -99,20 +99,32 @@ export default function ModuleDetail({
 
                 {/* Content */}
                 <div className="min-w-0 flex-1">
-                  <a
-                    href={r.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={clsx(
-                      "text-sm font-medium hover:text-primary transition-colors block truncate",
-                      checked ? "text-muted-foreground line-through" : "text-foreground"
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={r.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={clsx(
+                        "text-sm font-medium hover:text-primary transition-colors block truncate",
+                        checked ? "text-muted-foreground line-through" : "text-foreground"
+                      )}
+                    >
+                      {r.title}
+                    </a>
+                    {r.duration && (
+                      <span className="text-[10px] font-mono text-muted-foreground shrink-0">
+                        {r.duration}
+                      </span>
                     )}
-                  >
-                    {r.title}
-                  </a>
+                  </div>
                   <p className="text-[10px] font-mono text-muted-foreground mt-0.5">
                     {r.source}
                   </p>
+                  {r.why && !checked && (
+                    <p className="text-xs text-muted-foreground/70 mt-1 leading-relaxed">
+                      {r.why}
+                    </p>
+                  )}
                 </div>
               </div>
             );
