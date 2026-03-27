@@ -120,6 +120,7 @@ export default function TrackView() {
       {showConfirmModal && (
         <CompletionModal
           moduleName={activeModule.title}
+          uncheckedCount={activeModule.resources.filter((r) => !checkedResources.has(r.id)).length}
           onConfirm={handleCompleteModule}
           onCancel={() => setShowConfirmModal(false)}
         />
