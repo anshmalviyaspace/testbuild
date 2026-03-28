@@ -62,7 +62,7 @@ export default function HeroSection() {
         <div className="mt-10 flex items-center justify-center gap-4 animate-fade-in-up opacity-0 stagger-4">
           <Link
             to="/signup"
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-7 py-3.5 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center gap-2 text-primary-foreground px-7 py-3.5 rounded-lg font-semibold transition-colors bg-white"
           >
             Start Building <ArrowRight size={16} />
           </Link>
@@ -79,7 +79,7 @@ export default function HeroSection() {
           {stats.map(({ value, label }) => (
             <div key={label}>
               <p className="text-2xl font-heading font-bold">{value}</p>
-              <p className="text-[10px] font-mono text-muted-foreground tracking-widest mt-1">
+              <p className="text-[10px] font-mono tracking-widest mt-1 text-white">
                 {label}
               </p>
             </div>
