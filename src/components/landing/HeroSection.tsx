@@ -47,13 +47,13 @@ export default function HeroSection() {
           <span className="block text-6xl sm:text-7xl lg:text-[5.5rem] leading-[1.05] mt-2 text-gradient-primary">
             BUILD.
           </span>
-          <span className="block text-3xl sm:text-4xl lg:text-5xl leading-[1.1] mt-2 text-muted-foreground font-bold">
+          <span className="block text-3xl sm:text-4xl lg:text-5xl leading-[1.1] mt-2 font-bold text-white">
             while you learn.
           </span>
         </h1>
 
         {/* Subtext */}
-        <p className="mt-8 text-lg text-muted-foreground max-w-2xl mx-auto text-pretty animate-fade-in-up opacity-0 stagger-3">
+        <p className="mt-8 text-lg max-w-2xl mx-auto text-pretty animate-fade-in-up opacity-0 stagger-3 text-white">
           Buildhub is where college students learn AI, design, and tech by shipping real
           projects — not watching videos.
         </p>
@@ -68,7 +68,7 @@ export default function HeroSection() {
           </Link>
           <a
             href="#projects"
-            className="inline-flex items-center gap-2 border border-border px-7 py-3.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:border-muted-foreground/50 transition-colors"
+            className="inline-flex items-center gap-2 border border-border px-7 py-3.5 rounded-lg text-sm hover:border-muted-foreground/50 transition-colors text-white"
           >
             See Projects
           </a>
