@@ -42,7 +42,7 @@ export default function Navbar() {
             <a
               key={label}
               href={href}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm transition-colors text-white"
             >
               {label}
             </a>
