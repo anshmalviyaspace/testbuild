@@ -68,7 +68,7 @@ export default function HeroSection() {
           </Link>
           <a
             href="#projects"
-            className="inline-flex items-center gap-2 border border-border px-7 py-3.5 rounded-lg text-sm hover:border-muted-foreground/50 transition-colors text-white"
+            className="inline-flex items-center gap-2 border px-7 py-3.5 rounded-lg text-sm transition-colors text-white border-white"
           >
             See Projects
           </a>
