@@ -139,7 +139,7 @@ class RetroEffectImpl extends Effect {
       ['pixelSize', new THREE.Uniform(2.0)]
     ]);
     super('RetroEffect', ditherFragmentShader, { uniforms });
-    this.uniforms = uniforms;
+    (this as any).uniforms = uniforms;
   }
   set colorNum(v: number) {
     this.uniforms.get('colorNum')!.value = v;
