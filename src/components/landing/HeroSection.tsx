@@ -79,7 +79,7 @@ export default function HeroSection() {
           {stats.map(({ value, label }) => (
             <div key={label}>
               <p className="text-2xl font-heading font-bold">{value}</p>
-              <p className="text-[10px] font-mono text-muted-foreground tracking-widest mt-1">
+              <p className="text-[10px] font-mono tracking-widest mt-1 text-white">
                 {label}
               </p>
             </div>

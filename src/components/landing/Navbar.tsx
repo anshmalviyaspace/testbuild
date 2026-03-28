@@ -52,7 +52,7 @@ export default function Navbar() {
         {/* CTA */}
         <Link
           to="/signup"
-          className="bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors"
+          className="text-primary-foreground px-5 py-2 rounded-lg text-sm font-semibold transition-colors bg-white"
         >
           Start Building
         </Link>
