@@ -42,7 +42,7 @@ export default function HowItWorks() {
   const [active, setActive] = useState(0);
 
   return (
-    <section className="py-24 border-t border-border">
+    <section className="border-t border-border py-[50px]">
       <div className="container">
         <p className="text-xs font-mono text-primary tracking-widest uppercase mb-3">
           THE PROCESS
