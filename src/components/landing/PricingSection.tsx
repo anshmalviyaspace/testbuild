@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Check, X } from "lucide-react";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 
 const freePlan = {
   name: "Builder",
