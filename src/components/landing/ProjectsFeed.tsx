@@ -36,7 +36,7 @@ export default function ProjectsFeed() {
   };
 
   return (
-    <section id="projects" className="py-24 border-t border-border">
+    <section id="projects" className="border-t border-border py-[50px]">
       <div className="container">
         <p className="text-xs font-mono text-primary tracking-widest uppercase mb-3">
           BUILT BY STUDENTS

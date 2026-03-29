@@ -32,7 +32,7 @@ const proPlan = {
 
 export default function PricingSection() {
   return (
-    <section id="pricing" className="py-24 border-t border-border">
+    <section id="pricing" className="border-t border-border py-[50px]">
       <div className="container max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <p className="text-xs font-mono text-primary tracking-widest uppercase mb-3">
