@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 
 export default function FinalCTA() {
   return (
