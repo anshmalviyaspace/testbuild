@@ -1,61 +1,37 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, ExternalLink, Rocket, BookCheck, PartyPopper, Pencil } from "lucide-react";
+import { ArrowLeft, ExternalLink, Pencil, PartyPopper } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-
-const profileData = {
-  rahulm: {
-    fullName: "Rahul Mehta",
-    username: "rahulm",
-    initials: "RM",
-    college: "IIT Delhi · CSE '26",
-    bio: "Building at the intersection of AI and product. Shipped 3 projects on Buildhub. Obsessed with making AI tools for students.",
-    track: "🤖 AI & ML",
-    verified: true,
-    stats: { projects: 3, xp: 320, likes: 100, joined: "Feb 2026" },
-    skills: ["Python", "React", "Claude API", "Prompt Engineering", "LangChain", "HTML/CSS", "JavaScript"],
-    projects: [
-      {
-        id: "p1", title: "AI Resume Analyzer", emoji: "🤖",
-        description: "An AI-powered tool that analyzes resumes against job descriptions, highlights gaps, and suggests improvements using Claude.",
-        tags: ["AI", "Python"], likes: 47, views: 234, shippedAt: "2 weeks ago",
-        gradientFrom: "hsl(160 100% 45% / 0.3)", gradientTo: "hsl(220 100% 50% / 0.2)",
-      },
-      {
-        id: "p2", title: "Prompt Battle Arena", emoji: "⚡",
-        description: "A gamified platform where users pit different prompts against each other to see which generates better AI outputs.",
-        tags: ["React", "Claude API"], likes: 31, views: 189, shippedAt: "1 month ago",
-        gradientFrom: "hsl(280 80% 60% / 0.3)", gradientTo: "hsl(346 100% 62% / 0.2)",
-      },
-      {
-        id: "p3", title: "AI Concept Explainer", emoji: "🧠",
-        description: "A simple web tool that takes any AI/ML concept and explains it in plain language with analogies and examples.",
-        tags: ["HTML", "JS", "Claude API"], likes: 22, views: 156, shippedAt: "6 weeks ago",
-        gradientFrom: "hsl(220 100% 50% / 0.3)", gradientTo: "hsl(160 100% 45% / 0.2)",
-      },
-    ],
-    timeline: [
-      { icon: "rocket", text: 'Shipped "AI Resume Analyzer"', time: "2 weeks ago" },
-      { icon: "check", text: 'Completed "Build with Claude API" module', time: "3 weeks ago" },
-      { icon: "rocket", text: 'Shipped "Prompt Battle Arena"', time: "1 month ago" },
-      { icon: "check", text: 'Completed "Prompt Engineering Fundamentals" module', time: "5 weeks ago" },
-      { icon: "rocket", text: 'Shipped "AI Concept Explainer"', time: "6 weeks ago" },
-      { icon: "check", text: 'Completed "Understanding AI & LLMs" module', time: "7 weeks ago" },
-      { icon: "party", text: "Joined Buildhub", time: "Feb 2026" },
-    ],
-  },
-};
-
-const TimelineIcon = ({ type }: { type: string }) => {
-  if (type === "rocket") return <Rocket size={14} className="text-primary" />;
-  if (type === "check") return <BookCheck size={14} className="text-primary" />;
-  return <PartyPopper size={14} className="text-primary" />;
-};
+import { useEffect, useState } from "react";
 
 export default function PublicProfilePage() {
   const { username } = useParams();
   const { currentUser } = useAuth();
   const isOwnProfile = currentUser?.username === username;
-  const profile = profileData[username as keyof typeof profileData];
+  const [quizResult, setQuizResult] = useState<{ personality_type: string; personality_description: string; score: number; level: string } | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("buildhub_quiz_results");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      setQuizResult({
+        personality_type: parsed.personality_type,
+        personality_description: parsed.personality_description,
+        score: parsed.score,
+        level: parsed.level,
+      });
+    }
+  }, []);
+
+  // Only show profile if it's the current user's profile (no more hardcoded data)
+  const profile = isOwnProfile && currentUser ? {
+    fullName: currentUser.fullName,
+    username: currentUser.username,
+    initials: currentUser.avatarInitials,
+    college: currentUser.college,
+    bio: currentUser.bio || "",
+    track: currentUser.currentTrack,
+    xp: currentUser.xpPoints,
+  } : null;
 
   if (!profile) {
     return (
@@ -71,6 +47,10 @@ export default function PublicProfilePage() {
       </div>
     );
   }
+
+  const trackEmoji = profile.track?.includes("AI") ? "🤖" :
+    profile.track?.includes("UI") ? "🎨" :
+    profile.track?.includes("Full") ? "💻" : "🚀";
 
   return (
     <div className="min-h-screen bg-background">
@@ -90,95 +70,94 @@ export default function PublicProfilePage() {
         {/* HEADER */}
         <section className="bg-surface border border-border rounded-xl p-8">
           <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-            {/* Avatar */}
             <div className="w-[60px] h-[60px] shrink-0 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-lg font-heading font-bold text-primary-foreground">
               {profile.initials}
             </div>
-
             <div className="flex-1 space-y-3">
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="font-heading text-[32px] leading-tight font-extrabold">{profile.fullName}</h1>
                 {isOwnProfile && (
-                  <Link
-                    to="/dashboard/settings"
-                    className="inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground border border-border rounded-lg px-3 py-1.5 hover:text-foreground hover:border-muted-foreground/40 transition-colors"
-                  >
+                  <Link to="/dashboard/settings" className="inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground border border-border rounded-lg px-3 py-1.5 hover:text-foreground hover:border-muted-foreground/40 transition-colors">
                     <Pencil size={11} /> Edit Profile
                   </Link>
                 )}
               </div>
-
               <p className="text-sm font-mono text-primary">@{profile.username}</p>
               <p className="text-sm text-muted-foreground">{profile.college}</p>
-              <p className="text-sm text-muted-foreground/80 leading-relaxed max-w-xl">{profile.bio}</p>
+              {profile.bio && <p className="text-sm text-muted-foreground/80 leading-relaxed max-w-xl">{profile.bio}</p>}
 
               <div className="flex flex-wrap items-center gap-2 pt-1">
-                <span className="text-xs font-mono bg-surface2 text-foreground px-3 py-1 rounded-full">{profile.track}</span>
-                {profile.verified && (
-                  <span className="inline-flex items-center gap-1 text-xs font-mono text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded-full">
-                    <CheckCircle2 size={12} /> Verified Builder
-                  </span>
-                )}
+                <span className="text-xs font-mono bg-surface2 text-foreground px-3 py-1 rounded-full">{trackEmoji} {profile.track}</span>
               </div>
 
-              {/* Stats */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-border mt-4">
-                {[
-                  { value: profile.stats.projects, label: "Projects Shipped" },
-                  { value: `${profile.stats.xp}`, label: "XP Earned" },
-                  { value: profile.stats.likes, label: "Likes Received" },
-                  { value: profile.stats.joined, label: "Joined" },
-                ].map((s) => (
-                  <div key={s.label}>
-                    <p className="font-heading text-xl font-bold">{s.value}</p>
-                    <p className="text-[10px] font-mono text-muted-foreground tracking-wide uppercase">{s.label}</p>
-                  </div>
-                ))}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-border mt-4">
+                <div>
+                  <p className="font-heading text-xl font-bold">0</p>
+                  <p className="text-[10px] font-mono text-muted-foreground tracking-wide uppercase">Projects Shipped</p>
+                </div>
+                <div>
+                  <p className="font-heading text-xl font-bold">{profile.xp}</p>
+                  <p className="text-[10px] font-mono text-muted-foreground tracking-wide uppercase">XP Earned</p>
+                </div>
+                <div>
+                  <p className="font-heading text-xl font-bold">Today</p>
+                  <p className="text-[10px] font-mono text-muted-foreground tracking-wide uppercase">Joined</p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* SKILLS */}
-        <section>
-          <p className="text-[10px] font-mono text-muted-foreground tracking-widest uppercase mb-4">Skills & Tools</p>
-          <div className="flex flex-wrap gap-2">
-            {profile.skills.map((s) => (
-              <span key={s} className="text-xs font-mono bg-surface2 text-muted-foreground px-3 py-1.5 rounded-full border border-border">
-                {s}
-              </span>
-            ))}
-          </div>
-        </section>
-
-        {/* PROJECTS */}
-        <section>
-          <p className="text-[10px] font-mono text-muted-foreground tracking-widest uppercase mb-4">Shipped Projects</p>
-          <div className="grid sm:grid-cols-2 gap-5">
-            {profile.projects.map((p) => (
-              <div key={p.id} className="bg-card border border-border rounded-xl overflow-hidden group hover:border-primary/30 transition-colors">
-                <div
-                  className="h-28 flex items-center justify-center"
-                  style={{ background: `linear-gradient(135deg, ${p.gradientFrom}, ${p.gradientTo})` }}
-                >
-                  <span className="text-4xl group-hover:scale-110 transition-transform duration-300">{p.emoji}</span>
-                </div>
-                <div className="p-5 space-y-2.5">
-                  <h3 className="font-heading text-base font-bold">{p.title}</h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{p.description}</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {p.tags.map((t) => (
-                      <span key={t} className="text-[10px] font-mono bg-surface2 text-muted-foreground px-2 py-0.5 rounded">{t}</span>
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-4 text-xs font-mono text-muted-foreground pt-1">
-                    <span>❤️ {p.likes}</span>
-                    <span>👁 {p.views}</span>
-                    <span>{p.shippedAt}</span>
-                  </div>
+        {/* BUILDER PROFILE */}
+        {quizResult ? (
+          <section>
+            <p className="text-[10px] font-mono text-muted-foreground tracking-widest uppercase mb-4">BUILDER PROFILE</p>
+            <div className="bg-surface border border-border rounded-xl p-6 space-y-5">
+              <div className="flex justify-center">
+                <div className="inline-flex items-center gap-2 border border-primary/30 bg-primary/5 text-primary px-5 py-2.5 rounded-full text-sm font-mono tracking-wider">
+                  ✦ {quizResult.personality_type.toUpperCase()}
                 </div>
               </div>
-            ))}
+
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <p className="text-[10px] font-mono text-muted-foreground tracking-widest uppercase">BASE LEVEL</p>
+                  <p className="font-heading text-xl font-extrabold mt-1">{quizResult.level}</p>
+                  <p className="text-[10px] text-muted-foreground">when joined</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-[10px] font-mono text-muted-foreground tracking-widest uppercase">KNOWLEDGE SCORE</p>
+                  <p className="font-heading text-xl font-extrabold text-primary mt-1">{quizResult.score} / 100</p>
+                  <p className="text-[10px] text-muted-foreground">at assessment</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-[10px] font-mono text-muted-foreground tracking-widest uppercase">CURRENT XP</p>
+                  <p className="font-heading text-xl font-extrabold mt-1">{profile.xp}</p>
+                  <p className="text-[10px] text-muted-foreground">earned building</p>
+                </div>
+              </div>
+
+              <p className="text-sm text-muted-foreground/80 italic text-center max-w-lg mx-auto leading-relaxed">
+                "{quizResult.personality_description}"
+              </p>
+            </div>
+          </section>
+        ) : isOwnProfile ? (
+          <section>
+            <div className="bg-surface border border-border border-dashed rounded-xl p-6 text-center">
+              <p className="text-sm text-muted-foreground">Assessment not taken yet</p>
+              <Link to="/quiz" className="text-xs font-mono text-primary hover:underline mt-2 inline-block">
+                Take Assessment →
+              </Link>
+            </div>
+          </section>
+        ) : null}
+
+        {/* PROJECTS — Empty */}
+        <section>
+          <p className="text-[10px] font-mono text-muted-foreground tracking-widest uppercase mb-4">Shipped Projects</p>
+          <div className="bg-card border border-border rounded-xl p-8 text-center">
+            <p className="text-sm text-muted-foreground">No projects shipped yet. Start building to fill this section.</p>
           </div>
         </section>
 
@@ -186,25 +165,19 @@ export default function PublicProfilePage() {
         <section>
           <p className="text-[10px] font-mono text-muted-foreground tracking-widest uppercase mb-4">Activity</p>
           <div className="relative pl-6 space-y-0">
-            {/* Vertical line */}
             <div className="absolute left-[7px] top-2 bottom-2 w-px bg-border" />
-
-            {profile.timeline.map((item, i) => (
-              <div key={i} className="relative flex items-start gap-4 py-3">
-                {/* Dot */}
-                <div className="absolute left-[-17px] top-[18px] w-3.5 h-3.5 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                </div>
-
-                <div className="flex-1 flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-2">
-                    <TimelineIcon type={item.icon} />
-                    <span className="text-sm text-foreground">{item.text}</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-muted-foreground whitespace-nowrap">{item.time}</span>
-                </div>
+            <div className="relative flex items-start gap-4 py-3">
+              <div className="absolute left-[-17px] top-[18px] w-3.5 h-3.5 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
               </div>
-            ))}
+              <div className="flex-1 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <PartyPopper size={14} className="text-primary" />
+                  <span className="text-sm text-foreground">Joined Buildhub</span>
+                </div>
+                <span className="text-[10px] font-mono text-muted-foreground whitespace-nowrap">Just now</span>
+              </div>
+            </div>
           </div>
         </section>
 
