@@ -88,7 +88,7 @@ export default function OnboardingPage() {
       email: signupData?.email,
     });
 
-    navigate("/dashboard/home");
+    navigate("/quiz");
   };
 
   const animClass =

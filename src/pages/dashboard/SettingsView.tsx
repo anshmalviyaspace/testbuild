@@ -28,7 +28,7 @@ export default function SettingsView() {
   const [showTrackModal, setShowTrackModal] = useState(false);
   const [selectedTrack, setSelectedTrack] = useState(currentUser?.currentTrack || "AI & ML");
 
-  const [email, setEmail] = useState(currentUser?.email || "rahul@iitd.ac.in");
+  const [email, setEmail] = useState(currentUser?.email || "");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

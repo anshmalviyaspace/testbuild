@@ -29,21 +29,16 @@ interface AuthContextType {
   logout: () => void;
 }
 
-const defaultUser: User = {
-  id: "u_001",
-  fullName: "Rahul Mehta",
-  username: "rahulm",
-  college: "IIT Delhi",
-  currentTrack: "AI & ML",
-  xpPoints: 320,
-  streakDays: 7,
-  avatarInitials: "RM",
-};
+// No default user — start logged out
+
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [currentUser, setCurrentUser] = useState<User | null>(defaultUser);
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    const stored = localStorage.getItem("buildhub_user");
+    return stored ? JSON.parse(stored) : null;
+  });
   const [signupData, setSignupDataState] = useState<SignupData | null>(null);
 
   const setSignupData = (data: SignupData) => setSignupDataState(data);

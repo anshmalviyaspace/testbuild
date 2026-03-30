@@ -1,7 +1,7 @@
 import { Outlet, NavLink, Link, useNavigate } from "react-router-dom";
 import { Home, Target, FolderKanban, Users, TrendingUp, Settings, Globe, LogOut, Menu, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import clsx from "clsx";
 
@@ -20,6 +20,15 @@ export default function DashboardLayout() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [quizResult, setQuizResult] = useState<{ personality_type: string } | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("buildhub_quiz_results");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      setQuizResult({ personality_type: parsed.personality_type });
+    }
+  }, []);
 
   const handleLogout = () => { logout(); navigate("/"); };
 
@@ -44,6 +53,14 @@ export default function DashboardLayout() {
             </div>
           </div>
           <p className="text-[11px] text-muted-foreground truncate">{currentUser.college}</p>
+          {quizResult && (
+            <div className="mt-2 space-y-1">
+              <span className="inline-flex items-center gap-1 text-[10px] font-mono text-primary border border-primary/20 px-2 py-0.5 rounded-full">
+                ✦ {quizResult.personality_type.toUpperCase()}
+              </span>
+              <p className="text-[10px] font-mono text-muted-foreground">{currentUser.xpPoints} XP</p>
+            </div>
+          )}
         </div>
       )}
       <nav className="flex-1 p-3 space-y-0.5">
