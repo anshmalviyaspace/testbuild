@@ -26,16 +26,10 @@ const gradients = [
   { from: "hsl(45 100% 60% / 0.3)", to: "hsl(25 95% 55% / 0.2)" },
 ];
 
-const initialProjects: ShippedProject[] = [
-  { id: "p1", title: "AI Resume Analyzer", description: "An AI-powered tool that analyzes resumes against job descriptions, highlights gaps, and suggests improvements using Claude.", tags: ["AI", "Python"], emoji: "🤖", likes: 47, views: 234, shippedAt: "2 weeks ago", gradientFrom: gradients[0].from, gradientTo: gradients[0].to },
-  { id: "p2", title: "Prompt Battle Arena", description: "A gamified platform where users pit different prompts against each other to see which generates better AI outputs.", tags: ["React", "Claude API"], emoji: "⚡", likes: 31, views: 189, shippedAt: "1 month ago", gradientFrom: gradients[1].from, gradientTo: gradients[1].to },
-  { id: "p3", title: "AI Concept Explainer", description: "A simple web tool that takes any AI/ML concept and explains it in plain language with analogies and examples.", tags: ["HTML", "JS", "Claude API"], emoji: "🧠", likes: 22, views: 156, shippedAt: "6 weeks ago", gradientFrom: gradients[2].from, gradientTo: gradients[2].to },
-];
-
 export default function ProjectsView() {
   const { toast } = useToast();
   const location = useLocation();
-  const [projects, setProjects] = useState<ShippedProject[]>(initialProjects);
+  const [projects, setProjects] = useState<ShippedProject[]>([]);
   const [showModal, setShowModal] = useState(false);
 
   const briefData = location.state as { prefillTitle?: string; prefillDescription?: string; openModal?: boolean } | null;
@@ -44,7 +38,6 @@ export default function ProjectsView() {
     if (briefData?.prefillTitle || briefData?.openModal) setShowModal(true);
   }, [briefData]);
 
-  // Keyboard shortcut: N to open modal, Escape to close
   useKeyboardShortcuts({
     onNewProject: () => setShowModal(true),
     onEscape: () => setShowModal(false),
@@ -59,15 +52,18 @@ export default function ProjectsView() {
 
   if (projects.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8">
+      <div className="flex-1 flex items-center justify-center p-8 animate-fade-in opacity-0">
         <div className="text-center max-w-sm">
           <span className="text-6xl block mb-6">🚀</span>
-          <h2 className="font-heading text-xl font-bold mb-2">You haven't shipped anything yet.</h2>
-          <p className="text-sm text-muted-foreground mb-6">Your first project is one brief away.</p>
+          <h2 className="font-heading text-xl font-bold mb-2">Nothing shipped yet.</h2>
+          <p className="text-sm text-muted-foreground mb-6">Your first project brief is waiting in your track.</p>
           <Link to="/dashboard/track" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors">
-            Start With a Brief <ArrowRight size={14} />
+            Go to My Track <ArrowRight size={14} />
           </Link>
         </div>
+        {showModal && (
+          <NewProjectModal onClose={() => setShowModal(false)} onPublish={handlePublish} prefillTitle={briefData?.prefillTitle} prefillDescription={briefData?.prefillDescription} />
+        )}
       </div>
     );
   }
