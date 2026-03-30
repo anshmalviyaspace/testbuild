@@ -34,7 +34,7 @@ const tracks = [
 
 export default function TracksSection() {
   return (
-    <section id="tracks" className="py-24 border-t border-border">
+    <section id="tracks" className="border-t border-border py-[50px]">
       <div className="container">
         <p className="text-xs font-mono text-primary tracking-widest uppercase mb-3">
           WHAT YOU'LL BUILD IN
