@@ -29,16 +29,8 @@ interface AuthContextType {
   logout: () => void;
 }
 
-const defaultUser: User = {
-  id: "u_001",
-  fullName: "Rahul Mehta",
-  username: "rahulm",
-  college: "IIT Delhi",
-  currentTrack: "AI & ML",
-  xpPoints: 320,
-  streakDays: 7,
-  avatarInitials: "RM",
-};
+// No default user — start logged out
+
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
