@@ -14,7 +14,146 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_initials: string | null
+          bio: string | null
+          college: string | null
+          created_at: string | null
+          current_track: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          personality_type: string | null
+          quiz_level: string | null
+          quiz_score: number | null
+          quiz_taken: boolean | null
+          streak_days: number | null
+          updated_at: string | null
+          username: string | null
+          xp_points: number | null
+        }
+        Insert: {
+          avatar_initials?: string | null
+          bio?: string | null
+          college?: string | null
+          created_at?: string | null
+          current_track?: string | null
+          email?: string | null
+          full_name?: string | null
+          id: string
+          personality_type?: string | null
+          quiz_level?: string | null
+          quiz_score?: number | null
+          quiz_taken?: boolean | null
+          streak_days?: number | null
+          updated_at?: string | null
+          username?: string | null
+          xp_points?: number | null
+        }
+        Update: {
+          avatar_initials?: string | null
+          bio?: string | null
+          college?: string | null
+          created_at?: string | null
+          current_track?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          personality_type?: string | null
+          quiz_level?: string | null
+          quiz_score?: number | null
+          quiz_taken?: boolean | null
+          streak_days?: number | null
+          updated_at?: string | null
+          username?: string | null
+          xp_points?: number | null
+        }
+        Relationships: []
+      }
+      quiz_questions: {
+        Row: {
+          category: string
+          created_at: string | null
+          id: string
+          options: Json
+          order_index: number | null
+          question: string
+          question_type: string | null
+          track: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          id?: string
+          options: Json
+          order_index?: number | null
+          question: string
+          question_type?: string | null
+          track: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          id?: string
+          options?: Json
+          order_index?: number | null
+          question?: string
+          question_type?: string | null
+          track?: string
+        }
+        Relationships: []
+      }
+      quiz_results: {
+        Row: {
+          answers: Json
+          category_scores: Json
+          id: string
+          level: string
+          personality_description: string
+          personality_type: string
+          score: number
+          taken_at: string | null
+          track: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          answers: Json
+          category_scores: Json
+          id?: string
+          level: string
+          personality_description: string
+          personality_type: string
+          score: number
+          taken_at?: string | null
+          track: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          answers?: Json
+          category_scores?: Json
+          id?: string
+          level?: string
+          personality_description?: string
+          personality_type?: string
+          score?: number
+          taken_at?: string | null
+          track?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_results_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
