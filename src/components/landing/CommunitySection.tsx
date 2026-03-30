@@ -12,7 +12,7 @@ const initials = ["RM", "SK", "DS", "AP", "KR", "PN"];
 
 export default function CommunitySection() {
   return (
-    <section id="community" className="py-24 border-t border-border">
+    <section id="community" className="border-t border-border py-[50px]">
       <div className="container max-w-2xl mx-auto text-center">
         {/* Overlapping avatars */}
         <div className="flex items-center justify-center mb-8">
