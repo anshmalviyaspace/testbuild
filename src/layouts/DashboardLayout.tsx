@@ -53,7 +53,14 @@ export default function DashboardLayout() {
             </div>
           </div>
           <p className="text-[11px] text-muted-foreground truncate">{currentUser.college}</p>
-        </div>
+          {quizResult && (
+            <div className="mt-2 space-y-1">
+              <span className="inline-flex items-center gap-1 text-[10px] font-mono text-primary border border-primary/20 px-2 py-0.5 rounded-full">
+                ✦ {quizResult.personality_type.toUpperCase()}
+              </span>
+              <p className="text-[10px] font-mono text-muted-foreground">{currentUser.xpPoints} XP</p>
+            </div>
+          )}
       )}
       <nav className="flex-1 p-3 space-y-0.5">
         {navItems.map(({ to, label, icon: Icon }) => (
