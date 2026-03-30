@@ -1,7 +1,7 @@
 import { Outlet, NavLink, Link, useNavigate } from "react-router-dom";
 import { Home, Target, FolderKanban, Users, TrendingUp, Settings, Globe, LogOut, Menu, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import clsx from "clsx";
 
