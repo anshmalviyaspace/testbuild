@@ -24,7 +24,7 @@ export default function HeroSection() {
             mouseRadius={0.3}
             colorNum={2}
             waveAmplitude={0.3}
-            waveFrequency={3}
+            waveFrequency={4}
             waveSpeed={0.03} />
           
         </Suspense>
