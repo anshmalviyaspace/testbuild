@@ -1,5 +1,8 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { Session, User as SupabaseUser } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
 
+// The shape of a user profile loaded from the `profiles` table
 export interface User {
   id: string;
   fullName: string;
@@ -13,6 +16,7 @@ export interface User {
   email?: string;
 }
 
+// Temporary data held between SignupPage → OnboardingPage → Supabase signup
 export interface SignupData {
   fullName: string;
   college: string;
@@ -22,40 +26,112 @@ export interface SignupData {
 
 interface AuthContextType {
   currentUser: User | null;
+  session: Session | null;
   signupData: SignupData | null;
   isAuthenticated: boolean;
+  isLoading: boolean; // true while we're waiting for Supabase to restore session
   setSignupData: (data: SignupData) => void;
-  login: (user: User) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
+  refreshProfile: () => Promise<void>; // call this after updating the profile
 }
-
-// No default user — start logged out
-
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Helper: turn a raw `profiles` row into our typed User object
+function rowToUser(row: any, email?: string): User {
+  return {
+    id: row.id,
+    fullName: row.full_name ?? "",
+    username: row.username ?? "",
+    college: row.college ?? "",
+    currentTrack: row.current_track ?? "AI & Machine Learning",
+    xpPoints: row.xp_points ?? 0,
+    streakDays: row.streak_days ?? 0,
+    avatarInitials: row.avatar_initials ?? "BU",
+    bio: row.bio ?? undefined,
+    email: row.email ?? email,
+  };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [currentUser, setCurrentUser] = useState<User | null>(() => {
-    const stored = localStorage.getItem("buildhub_user");
-    return stored ? JSON.parse(stored) : null;
-  });
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [signupData, setSignupDataState] = useState<SignupData | null>(null);
+  // Start as true so the app doesn't flash the login page on refresh
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load the profile row for a given Supabase user
+  const loadProfile = async (supabaseUser: SupabaseUser) => {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", supabaseUser.id)
+      .single();
+
+    if (error || !data) {
+      // Profile might not exist yet (e.g. mid-onboarding) — that's okay
+      setCurrentUser(null);
+      return;
+    }
+
+    setCurrentUser(rowToUser(data, supabaseUser.email));
+  };
+
+  // Re-fetch the profile from Supabase (call after settings updates)
+  const refreshProfile = async () => {
+    if (!session?.user) return;
+    await loadProfile(session.user);
+  };
+
+  useEffect(() => {
+    // 1. Subscribe to auth state changes (login, logout, token refresh)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (_event, newSession) => {
+        setSession(newSession);
+
+        if (newSession?.user) {
+          await loadProfile(newSession.user);
+        } else {
+          setCurrentUser(null);
+        }
+
+        setIsLoading(false);
+      }
+    );
+
+    // 2. Check for an existing session on mount (handles page refresh)
+    supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
+      setSession(existingSession);
+      if (existingSession?.user) {
+        loadProfile(existingSession.user).finally(() => setIsLoading(false));
+      } else {
+        setIsLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const setSignupData = (data: SignupData) => setSignupDataState(data);
 
-  const login = (user: User) => {
-    setCurrentUser(user);
-    localStorage.setItem("buildhub_user", JSON.stringify(user));
-  };
-
-  const logout = () => {
+  const logout = async () => {
+    await supabase.auth.signOut();
     setCurrentUser(null);
-    localStorage.removeItem("buildhub_user");
+    setSession(null);
   };
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, signupData, isAuthenticated: !!currentUser, setSignupData, login, logout }}
+      value={{
+        currentUser,
+        session,
+        signupData,
+        isAuthenticated: !!currentUser,
+        isLoading,
+        setSignupData,
+        logout,
+        refreshProfile,
+      }}
     >
       {children}
     </AuthContext.Provider>
