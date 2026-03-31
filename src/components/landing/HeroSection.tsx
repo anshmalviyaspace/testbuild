@@ -18,11 +18,11 @@ export default function HeroSection() {
       <div className="absolute inset-0">
         <Suspense fallback={<div className="absolute inset-0 bg-background" />}>
           <Dither
-            waveColor={[0.5, 0.5, 0.5]}
+            waveColor={[0.7, 0.7, 0.5]}
             disableAnimation={false}
             enableMouseInteraction
             mouseRadius={0.3}
-            colorNum={1}
+            colorNum={2}
             waveAmplitude={0.3}
             waveFrequency={3}
             waveSpeed={0.05} />
