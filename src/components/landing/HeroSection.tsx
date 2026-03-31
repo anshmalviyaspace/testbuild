@@ -22,7 +22,7 @@ export default function HeroSection() {
             disableAnimation={false}
             enableMouseInteraction
             mouseRadius={0.3}
-            colorNum={2}
+            colorNum={4}
             waveAmplitude={0.3}
             waveFrequency={3}
             waveSpeed={0.05} />
