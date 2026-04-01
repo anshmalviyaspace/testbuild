@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { AlertTriangle, ArrowRight, X } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const trackOptions = [
   { value: "AI & ML", emoji: "🤖" },

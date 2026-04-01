@@ -37,8 +37,12 @@ const App = () => (
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
-            <Route path="/quiz" element={<QuizPage />} />
-            <Route path="/quiz/results" element={<QuizResultsPage />} />
+
+            {/* Protected quiz routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/quiz" element={<QuizPage />} />
+              <Route path="/quiz/results" element={<QuizResultsPage />} />
+            </Route>
             <Route path="/profile/:username" element={<PublicProfilePage />} />
 
             {/* Protected dashboard routes — redirect to /login if not authenticated */}

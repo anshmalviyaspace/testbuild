@@ -105,13 +105,6 @@ export default function QuizResultsPage() {
   };
 
   const handleEnter = () => {
-    // Update the mock auth user with quiz data
-    if (currentUser) {
-      login({
-        ...currentUser,
-        xpPoints: currentUser.xpPoints,
-      });
-    }
     navigate("/dashboard/home");
   };
 

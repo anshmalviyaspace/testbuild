@@ -278,25 +278,6 @@ export default function QuizPage() {
       }
     }
 
-    // Also update AuthContext
-    if (currentUser) {
-      const { login } = await import("@/contexts/AuthContext").then(() => {
-        // Can't dynamically call login — we'll handle via localStorage
-        return { login: null };
-      });
-    }
-
-    // Store quiz_taken in local user
-    const storedUser = localStorage.getItem("buildhub_user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      user.quizTaken = true;
-      user.quizScore = finalScore;
-      user.quizLevel = level;
-      user.personalityType = personalityType;
-      localStorage.setItem("buildhub_user", JSON.stringify(user));
-    }
-
     navigate("/quiz/results");
   };
 
