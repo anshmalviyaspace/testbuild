@@ -138,29 +138,10 @@ export default function OnboardingPage() {
       });
     }
 
-    // 3. Wait for AuthContext to pick up the session and load the profile
-    //    onAuthStateChange fires asynchronously, so we poll briefly.
-    let attempts = 0;
-    const waitForAuth = () =>
-      new Promise<void>((resolve) => {
-        const check = () => {
-          attempts++;
-          // Check if the session exists (auth state has settled)
-          supabase.auth.getSession().then(({ data }) => {
-            if (data.session || attempts > 15) {
-              resolve();
-            } else {
-              setTimeout(check, 200);
-            }
-          });
-        };
-        check();
-      });
-
-    await waitForAuth();
-
-    // Give AuthContext a moment to process the profile load
-    await new Promise((r) => setTimeout(r, 500));
+    // 3. signUp with auto-confirm creates a session immediately.
+    //    onAuthStateChange will fire and load the profile.
+    //    Wait a moment for the auth state to settle, then navigate.
+    await new Promise((r) => setTimeout(r, 1000));
 
     setIsSubmitting(false);
     navigate("/quiz");
