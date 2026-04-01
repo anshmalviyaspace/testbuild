@@ -224,6 +224,13 @@ export default function QuizPage() {
   }, []);
 
   const calculateAndSaveResults = async () => {
+    if (!userId) {
+      console.error("No user ID available for saving quiz results");
+      return;
+    }
+
+    setSaving(true);
+
     const technicalAnswers = answers.filter(a => a.category === "technical");
     const technicalScore = technicalAnswers.reduce((sum, a) => sum + (a.points || 0), 0);
     const finalScore = Math.round((technicalScore / 60) * 100);
@@ -243,7 +250,7 @@ export default function QuizPage() {
 
     const track = currentUser?.currentTrack || "AI & Machine Learning";
 
-    // Save to localStorage for results page (since user might not be in Supabase yet with this mock auth)
+    // Save results to localStorage for the results page
     const resultData = {
       track,
       score: finalScore,
@@ -254,35 +261,35 @@ export default function QuizPage() {
       answers,
       technicalScore,
     };
-
     localStorage.setItem("buildhub_quiz_results", JSON.stringify(resultData));
 
-    // Try to save to Supabase if user has real auth
-    if (currentUser?.id) {
-      try {
-        await supabase.from("quiz_results").upsert({
-          user_id: currentUser.id,
-          track,
-          score: finalScore,
-          level,
-          personality_type: personalityType,
-          personality_description: personalityDescription,
-          category_scores: categoryScores,
-          answers,
-        });
+    // Save to database
+    try {
+      const { error: upsertError } = await supabase.from("quiz_results").upsert({
+        user_id: userId,
+        track,
+        score: finalScore,
+        level,
+        personality_type: personalityType,
+        personality_description: personalityDescription,
+        category_scores: categoryScores,
+        answers,
+      });
+      if (upsertError) console.error("Quiz results upsert error:", upsertError);
 
-        await supabase.from("profiles").update({
-          quiz_score: finalScore,
-          quiz_level: level,
-          personality_type: personalityType,
-          quiz_taken: true,
-        }).eq("id", currentUser.id);
-      } catch (err) {
-        console.error("Error saving quiz results:", err);
-      }
+      const { error: profileError } = await supabase.from("profiles").update({
+        quiz_score: finalScore,
+        quiz_level: level,
+        personality_type: personalityType,
+        quiz_taken: true,
+      }).eq("id", userId);
+      if (profileError) console.error("Profile update error:", profileError);
+    } catch (err) {
+      console.error("Error saving quiz results:", err);
     }
 
     await refreshProfile();
+    setSaving(false);
     navigate("/quiz/results");
   };
 
