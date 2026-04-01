@@ -100,7 +100,7 @@ function SectionTransition({ category, onComplete }: { category: string; onCompl
 
 export default function QuizPage() {
   const navigate = useNavigate();
-  const { currentUser, refreshProfile } = useAuth();
+  const { currentUser, session, refreshProfile } = useAuth();
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -110,15 +110,18 @@ export default function QuizPage() {
   const [showTransition, setShowTransition] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [slideDirection, setSlideDirection] = useState<"in" | "out">("in");
+  const [saving, setSaving] = useState(false);
+
+  const userId = session?.user?.id;
 
   useEffect(() => {
     async function fetchQuestions() {
       // Check if quiz already taken
-      if (currentUser?.id) {
+      if (userId) {
         const { data: profile } = await supabase
           .from("profiles")
           .select("quiz_taken")
-          .eq("id", currentUser.id)
+          .eq("id", userId)
           .single();
         if (profile?.quiz_taken) {
           navigate("/dashboard/home", { replace: true });
@@ -133,6 +136,7 @@ export default function QuizPage() {
 
       if (error) {
         console.error("Error fetching questions:", error);
+        setLoading(false);
         return;
       }
 
@@ -146,7 +150,7 @@ export default function QuizPage() {
       setLoading(false);
     }
     fetchQuestions();
-  }, [currentUser, navigate]);
+  }, [userId, navigate]);
 
   const currentQuestion = questions[currentIndex];
   const totalQuestions = questions.length;
