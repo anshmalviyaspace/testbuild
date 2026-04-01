@@ -58,8 +58,9 @@ export default function SettingsView() {
     toast({ title: "Profile updated ✓", description: "Your changes have been saved." });
   };
 
-  const handleSwitchTrack = () => {
-    login({ ...currentUser, currentTrack: selectedTrack });
+  const handleSwitchTrack = async () => {
+    await supabase.from("profiles").update({ current_track: selectedTrack }).eq("id", currentUser.id);
+    await refreshProfile();
     setShowTrackModal(false);
     toast({ title: "Track switched!", description: "Your progress is saved." });
   };
