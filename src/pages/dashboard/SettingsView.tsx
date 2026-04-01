@@ -15,28 +15,49 @@ const trackOptions = [
 const avatarEmojis = ["😎", "🧑‍💻", "🦊", "🐱", "🤖", "👾", "🎯", "🔥", "🧠", "⚡", "🌈", "🎨"];
 
 export default function SettingsView() {
-  const { currentUser, logout, refreshProfile } = useAuth();
+  const { currentUser, logout, refreshProfile, isLoading } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const [fullName, setFullName] = useState(currentUser?.fullName || "");
-  const [username, setUsername] = useState(currentUser?.username || "");
-  const [college, setCollege] = useState(currentUser?.college || "");
-  const [bio, setBio] = useState(currentUser?.bio || "");
+  const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
+  const [college, setCollege] = useState("");
+  const [bio, setBio] = useState("");
   const [avatarEmoji, setAvatarEmoji] = useState<string | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const [showTrackModal, setShowTrackModal] = useState(false);
-  const [selectedTrack, setSelectedTrack] = useState(currentUser?.currentTrack || "AI & ML");
+  const [selectedTrack, setSelectedTrack] = useState("");
 
-  const [email, setEmail] = useState(currentUser?.email || "");
+  const [email, setEmail] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  if (!currentUser) return null;
+  // Initialize form state when currentUser loads
+  useEffect(() => {
+    if (currentUser) {
+      setFullName(currentUser.fullName || "");
+      setUsername(currentUser.username || "");
+      setCollege(currentUser.college || "");
+      setBio(currentUser.bio || "");
+      setSelectedTrack(currentUser.currentTrack || "AI & ML");
+      setEmail(currentUser.email || "");
+    }
+  }, [currentUser]);
+
+  if (isLoading || !currentUser) {
+    return (
+      <div className="p-6 sm:p-8 max-w-2xl">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 w-32 bg-surface2 rounded-lg" />
+          <div className="h-64 bg-surface2 rounded-xl" />
+        </div>
+      </div>
+    );
+  }
 
   const handleSaveProfile = async () => {
     if (!fullName.trim() || !username.trim()) {
