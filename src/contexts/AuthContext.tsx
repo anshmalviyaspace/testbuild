@@ -126,7 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         currentUser,
         session,
         signupData,
-        isAuthenticated: !!currentUser,
+        isAuthenticated: !!session,
         isLoading,
         setSignupData,
         logout,

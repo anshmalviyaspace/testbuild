@@ -66,7 +66,6 @@ export default function OnboardingPage() {
 
   const handleFinish = async () => {
     if (!signupData) {
-      // Guard: if they landed here without signup data, send them to signup
       navigate("/signup");
       return;
     }
@@ -81,12 +80,11 @@ export default function OnboardingPage() {
       .toUpperCase()
       .slice(0, 2);
 
-    // 1. Create the Supabase auth user
+    // 1. Create the Supabase auth user (auto-confirm is enabled)
     const { data: authData, error: signUpError } = await supabase.auth.signUp({
       email: signupData.email,
       password: signupData.password,
       options: {
-        // Pass basic profile info so we can use it in a DB trigger if needed
         data: {
           full_name: signupData.fullName,
         },
@@ -133,7 +131,6 @@ export default function OnboardingPage() {
     });
 
     if (profileError) {
-      // Profile insert failed — still continue, user can fix in Settings
       console.error("Profile insert error:", profileError.message);
       toast({
         title: "Account created!",
@@ -141,10 +138,31 @@ export default function OnboardingPage() {
       });
     }
 
-    setIsSubmitting(false);
+    // 3. Wait for AuthContext to pick up the session and load the profile
+    //    onAuthStateChange fires asynchronously, so we poll briefly.
+    let attempts = 0;
+    const waitForAuth = () =>
+      new Promise<void>((resolve) => {
+        const check = () => {
+          attempts++;
+          // Check if the session exists (auth state has settled)
+          supabase.auth.getSession().then(({ data }) => {
+            if (data.session || attempts > 15) {
+              resolve();
+            } else {
+              setTimeout(check, 200);
+            }
+          });
+        };
+        check();
+      });
 
-    // 3. AuthContext onAuthStateChange will automatically pick up the new session.
-    //    Navigate to the quiz to complete setup.
+    await waitForAuth();
+
+    // Give AuthContext a moment to process the profile load
+    await new Promise((r) => setTimeout(r, 500));
+
+    setIsSubmitting(false);
     navigate("/quiz");
   };
 
