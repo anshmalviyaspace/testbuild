@@ -278,6 +278,7 @@ export default function QuizPage() {
       }
     }
 
+    await refreshProfile();
     navigate("/quiz/results");
   };
 
