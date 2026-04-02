@@ -46,31 +46,33 @@ export default function TracksSection() {
 
         <div className="grid sm:grid-cols-2 gap-5">
           {tracks.map((t) => (
-            <div
+            <StarBorder
               key={t.title}
-              className="group relative bg-card border border-border rounded-xl p-6 card-hover-glow overflow-hidden"
+              color="hsl(160, 100%, 45%)"
+              speed="7s"
+              thickness={1}
+              className="group card-hover-glow"
             >
-              {/* Top green line */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-
-              <span className="text-3xl mb-4 block">{t.emoji}</span>
-              <h3 className="font-heading text-lg font-bold mb-2">{t.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4">{t.desc}</p>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-[11px] font-mono bg-surface2 text-muted-foreground px-2.5 py-1 rounded">
-                  {t.tag1}
-                </span>
-                <span className="text-[11px] font-mono bg-surface2 text-muted-foreground px-2.5 py-1 rounded">
-                  {t.tag2}
-                </span>
+              <div className="p-6 text-left">
+                <span className="text-3xl mb-4 block">{t.emoji}</span>
+                <h3 className="font-heading text-lg font-bold mb-2">{t.title}</h3>
+                <p className="text-sm text-muted-foreground mb-4">{t.desc}</p>
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-[11px] font-mono bg-surface2 text-muted-foreground px-2.5 py-1 rounded">
+                    {t.tag1}
+                  </span>
+                  <span className="text-[11px] font-mono bg-surface2 text-muted-foreground px-2.5 py-1 rounded">
+                    {t.tag2}
+                  </span>
+                </div>
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center gap-1.5 text-sm font-mono text-primary hover:underline"
+                >
+                  Explore Track <ArrowRight size={14} />
+                </Link>
               </div>
-              <Link
-                to="/signup"
-                className="inline-flex items-center gap-1.5 text-sm font-mono text-primary hover:underline"
-              >
-                Explore Track <ArrowRight size={14} />
-              </Link>
-            </div>
+            </StarBorder>
           ))}
         </div>
       </div>

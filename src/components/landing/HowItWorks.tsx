@@ -56,41 +56,45 @@ export default function HowItWorks() {
           {/* Steps accordion */}
           <div className="space-y-2">
             {steps.map((step, i) => (
-              <button
+              <StarBorder
                 key={step.num}
+                as="button"
+                color={active === i ? "hsl(160, 100%, 45%)" : "hsl(212, 16%, 48%)"}
+                speed="6s"
+                thickness={1}
+                className="w-full"
                 onClick={() => setActive(i)}
-                className={`w-full text-left rounded-lg border p-5 transition-all duration-300 ${
-                  active === i
-                    ? "border-primary/40 bg-surface"
-                    : "border-border bg-transparent hover:bg-surface/50"
-                }`}
               >
-                <div className="flex items-start gap-4">
-                  <span
-                    className={`font-mono text-sm font-medium mt-0.5 transition-colors ${
-                      active === i ? "text-primary" : "text-muted-foreground"
-                    }`}
-                  >
-                    {step.num}
-                  </span>
-                  <div>
-                    <p
-                      className={`font-heading font-semibold transition-colors ${
-                        active === i ? "text-foreground" : "text-muted-foreground"
+                <div className={`w-full text-left p-5 transition-all duration-300 ${
+                  active === i ? "bg-surface" : "bg-transparent"
+                }`}>
+                  <div className="flex items-start gap-4">
+                    <span
+                      className={`font-mono text-sm font-medium mt-0.5 transition-colors ${
+                        active === i ? "text-primary" : "text-muted-foreground"
                       }`}
                     >
-                      {step.title}
-                    </p>
-                    <div
-                      className={`overflow-hidden transition-all duration-300 ${
-                        active === i ? "max-h-20 opacity-100 mt-2" : "max-h-0 opacity-0"
-                      }`}
-                    >
-                      <p className="text-sm text-muted-foreground">{step.desc}</p>
+                      {step.num}
+                    </span>
+                    <div>
+                      <p
+                        className={`font-heading font-semibold transition-colors ${
+                          active === i ? "text-foreground" : "text-muted-foreground"
+                        }`}
+                      >
+                        {step.title}
+                      </p>
+                      <div
+                        className={`overflow-hidden transition-all duration-300 ${
+                          active === i ? "max-h-20 opacity-100 mt-2" : "max-h-0 opacity-0"
+                        }`}
+                      >
+                        <p className="text-sm text-muted-foreground">{step.desc}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </button>
+              </StarBorder>
             ))}
           </div>
 
