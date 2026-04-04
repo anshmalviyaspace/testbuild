@@ -1,16 +1,14 @@
-import { Heart, Eye } from "lucide-react";
-import type { CommunityProject } from "@/data/communityData";
-import { avatarColors } from "@/data/communityData";
+import { Heart } from "lucide-react";
+import type { CommunityProjectRow } from "@/hooks/useCommunity";
 
 interface Props {
-  project: CommunityProject;
-  liked: boolean;
+  project: CommunityProjectRow;
   onLike: () => void;
   onClick: () => void;
 }
 
-export default function CommunityProjectCard({ project: p, liked, onLike, onClick }: Props) {
-  const initials = p.author.replace(/\./g, "").split(" ").map((w) => w[0]).join("").toUpperCase();
+export default function CommunityProjectCard({ project: p, onLike, onClick }: Props) {
+  const initials = (p.author_initials || "??").toUpperCase();
 
   return (
     <div
@@ -20,7 +18,7 @@ export default function CommunityProjectCard({ project: p, liked, onLike, onClic
       {/* Thumbnail */}
       <div
         className="h-28 flex items-center justify-center"
-        style={{ background: `linear-gradient(135deg, ${p.gradientFrom}, ${p.gradientTo})` }}
+        style={{ background: `linear-gradient(135deg, ${p.gradient_from}, ${p.gradient_to})` }}
       >
         <span className="text-4xl group-hover:scale-110 transition-transform duration-300">
           {p.emoji}
@@ -30,14 +28,12 @@ export default function CommunityProjectCard({ project: p, liked, onLike, onClic
       <div className="p-4 space-y-2.5">
         {/* Author */}
         <div className="flex items-center gap-2">
-          <div
-            className={`w-6 h-6 rounded-full bg-gradient-to-br ${avatarColors[p.username] || "from-primary to-accent"} flex items-center justify-center text-[8px] font-mono font-semibold text-primary-foreground shrink-0`}
-          >
+          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-[8px] font-mono font-semibold text-primary-foreground shrink-0">
             {initials}
           </div>
           <div className="min-w-0">
             <span className="text-xs font-mono text-muted-foreground truncate block">
-              {p.author} · {p.college}
+              {p.author_name} · {p.author_college}
             </span>
           </div>
         </div>
@@ -61,25 +57,20 @@ export default function CommunityProjectCard({ project: p, liked, onLike, onClic
 
         {/* Stats */}
         <div className="flex items-center justify-between pt-1 text-[11px] font-mono text-muted-foreground">
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1">
-              <Eye size={11} /> {p.views}
-            </span>
-            <span className="flex items-center gap-1">
-              <Heart size={11} className={liked ? "fill-current text-destructive" : ""} />
-              {liked ? p.likes + 1 : p.likes}
-            </span>
-          </div>
+          <span className="flex items-center gap-1">
+            <Heart size={11} className={p.user_liked ? "fill-current text-destructive" : ""} />
+            {p.like_count}
+          </span>
           <button
             onClick={(e) => { e.stopPropagation(); onLike(); }}
             className={`flex items-center gap-1 px-2 py-1 rounded-md transition-all ${
-              liked
+              p.user_liked
                 ? "bg-destructive/10 text-destructive"
                 : "hover:bg-surface2 hover:text-destructive"
             }`}
           >
-            <Heart size={12} className={liked ? "fill-current" : ""} />
-            {liked ? "Liked" : "Like"}
+            <Heart size={12} className={p.user_liked ? "fill-current" : ""} />
+            {p.user_liked ? "Liked" : "Like"}
           </button>
         </div>
       </div>

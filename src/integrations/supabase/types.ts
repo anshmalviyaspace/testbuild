@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      community_projects: {
+        Row: {
+          created_at: string
+          description: string
+          emoji: string
+          gradient_from: string
+          gradient_to: string
+          id: string
+          tags: string[]
+          title: string
+          track: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          emoji?: string
+          gradient_from?: string
+          gradient_to?: string
+          id?: string
+          tags?: string[]
+          title: string
+          track?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          emoji?: string
+          gradient_from?: string
+          gradient_to?: string
+          id?: string
+          tags?: string[]
+          title?: string
+          track?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_initials: string | null
@@ -70,6 +112,70 @@ export type Database = {
           xp_points?: number | null
         }
         Relationships: []
+      }
+      project_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          project_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          project_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          project_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_comments_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "community_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_likes: {
+        Row: {
+          created_at: string
+          id: string
+          project_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          project_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          project_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_likes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "community_projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       quiz_questions: {
         Row: {
@@ -149,6 +255,13 @@ export type Database = {
             foreignKeyName: "quiz_results_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: true
+            referencedRelation: "leaderboard_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_results_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -163,6 +276,19 @@ export type Database = {
       }
     }
     Views: {
+      leaderboard_view: {
+        Row: {
+          avatar_initials: string | null
+          college: string | null
+          current_track: string | null
+          full_name: string | null
+          id: string | null
+          project_count: number | null
+          username: string | null
+          xp_points: number | null
+        }
+        Relationships: []
+      }
       public_profiles: {
         Row: {
           avatar_initials: string | null

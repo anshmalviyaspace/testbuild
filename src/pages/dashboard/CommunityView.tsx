@@ -1,54 +1,50 @@
 import { useState, useMemo } from "react";
-import { Search } from "lucide-react";
+import { Search, Plus, Loader2 } from "lucide-react";
 import clsx from "clsx";
-import { communityProjects, leaderboardData } from "@/data/communityData";
-import type { CommunityProject } from "@/data/communityData";
+import { useCommunityProjects, useToggleLike, useLeaderboard, useSubmitProject } from "@/hooks/useCommunity";
+import type { CommunityProjectRow } from "@/hooks/useCommunity";
 import CommunityProjectCard from "@/components/community/CommunityProjectCard";
 import CommunityProjectModal from "@/components/community/CommunityProjectModal";
 import Leaderboard from "@/components/community/Leaderboard";
+import SubmitProjectModal from "@/components/community/SubmitProjectModal";
 
 const filters = ["All", "AI & ML", "UI/UX", "Full Stack", "Startup"];
 
 export default function CommunityView() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [likedIds, setLikedIds] = useState<Set<number>>(new Set());
-  const [selectedProject, setSelectedProject] = useState<CommunityProject | null>(null);
+  const [selectedProject, setSelectedProject] = useState<CommunityProjectRow | null>(null);
   const [activeTab, setActiveTab] = useState<"latest" | "leaderboard">("latest");
   const [visibleCount, setVisibleCount] = useState(6);
+  const [showSubmit, setShowSubmit] = useState(false);
 
-  const filtered = useMemo(() => {
-    let list = communityProjects;
-    if (activeFilter !== "All") {
-      list = list.filter((p) => p.track === activeFilter);
-    }
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      list = list.filter((p) => p.title.toLowerCase().includes(q));
-    }
-    return list;
-  }, [activeFilter, searchQuery]);
+  const { data: projects = [], isLoading } = useCommunityProjects(activeFilter, searchQuery);
+  const { data: leaderboard = [], isLoading: lbLoading } = useLeaderboard();
+  const toggleLike = useToggleLike();
 
-  const visible = filtered.slice(0, visibleCount);
-  const hasMore = visibleCount < filtered.length;
+  const visible = projects.slice(0, visibleCount);
+  const hasMore = visibleCount < projects.length;
 
-  const toggleLike = (id: number) => {
-    setLikedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+  const handleLike = (project: CommunityProjectRow) => {
+    toggleLike.mutate({ projectId: project.id, liked: project.user_liked });
   };
 
   return (
     <div className="p-6 sm:p-8 animate-fade-in opacity-0">
       {/* Header */}
-      <h1 className="font-heading text-2xl font-extrabold mb-1">
-        What builders are shipping 🚀
-      </h1>
+      <div className="flex items-center justify-between mb-1">
+        <h1 className="font-heading text-2xl font-extrabold">
+          What builders are shipping 🚀
+        </h1>
+        <button
+          onClick={() => setShowSubmit(true)}
+          className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors"
+        >
+          <Plus size={16} /> Ship Project
+        </button>
+      </div>
       <p className="text-sm text-muted-foreground mb-6">
-        {communityProjects.length} projects shipped this month across 4 tracks
+        {projects.length} projects shipped across all tracks
       </p>
 
       {/* Tabs */}
@@ -98,10 +94,7 @@ export default function CommunityView() {
               ))}
             </div>
             <div className="relative sm:ml-auto">
-              <Search
-                size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-              />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
                 value={searchQuery}
@@ -114,10 +107,14 @@ export default function CommunityView() {
           </div>
 
           {/* Grid */}
-          {visible.length === 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center py-16">
+              <Loader2 size={24} className="animate-spin text-muted-foreground" />
+            </div>
+          ) : visible.length === 0 ? (
             <div className="text-center py-16">
               <span className="text-4xl block mb-4">🔍</span>
-              <p className="text-muted-foreground text-sm">No projects found matching your search.</p>
+              <p className="text-muted-foreground text-sm">No projects found. Be the first to ship!</p>
             </div>
           ) : (
             <>
@@ -126,8 +123,7 @@ export default function CommunityView() {
                   <CommunityProjectCard
                     key={p.id}
                     project={p}
-                    liked={likedIds.has(p.id)}
-                    onLike={() => toggleLike(p.id)}
+                    onLike={() => handleLike(p)}
                     onClick={() => setSelectedProject(p)}
                   />
                 ))}
@@ -147,18 +143,20 @@ export default function CommunityView() {
           )}
         </>
       ) : (
-        <Leaderboard data={leaderboardData} />
+        <Leaderboard data={leaderboard} loading={lbLoading} />
       )}
 
       {/* Modal */}
       {selectedProject && (
         <CommunityProjectModal
           project={selectedProject}
-          liked={likedIds.has(selectedProject.id)}
-          onLike={() => toggleLike(selectedProject.id)}
+          onLike={() => handleLike(selectedProject)}
           onClose={() => setSelectedProject(null)}
         />
       )}
+
+      {/* Submit */}
+      {showSubmit && <SubmitProjectModal onClose={() => setShowSubmit(false)} />}
     </div>
   );
 }
