@@ -152,11 +152,44 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "quiz_results_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          avatar_initials: string | null
+          current_track: string | null
+          id: string | null
+          streak_days: number | null
+          username: string | null
+          xp_points: number | null
+        }
+        Insert: {
+          avatar_initials?: string | null
+          current_track?: string | null
+          id?: string | null
+          streak_days?: number | null
+          username?: string | null
+          xp_points?: number | null
+        }
+        Update: {
+          avatar_initials?: string | null
+          current_track?: string | null
+          id?: string | null
+          streak_days?: number | null
+          username?: string | null
+          xp_points?: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
