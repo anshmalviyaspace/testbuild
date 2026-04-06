@@ -1,5 +1,4 @@
-import { useState } from "react";
-import StarBorder from "@/components/StarBorder";
+import Stepper, { Step } from "@/components/Stepper";
 
 const steps = [
   {
@@ -40,8 +39,6 @@ const steps = [
 ];
 
 export default function HowItWorks() {
-  const [active, setActive] = useState(0);
-
   return (
     <section className="border-t border-border py-[50px]">
       <div className="container">
@@ -52,75 +49,33 @@ export default function HowItWorks() {
           Learn. Build. Ship. Repeat.
         </h2>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* Steps accordion */}
-          <div className="space-y-2">
-            {steps.map((step, i) => (
-              <StarBorder
-                key={step.num}
-                as="button"
-                color={active === i ? "hsl(160, 100%, 45%)" : "hsl(212, 16%, 48%)"}
-                speed="6s"
-                thickness={1}
-                className="w-full"
-                onClick={() => setActive(i)}
-              >
-                <div className={`w-full text-left p-5 transition-all duration-300 ${
-                  active === i ? "bg-surface" : "bg-transparent"
-                }`}>
-                  <div className="flex items-start gap-4">
-                    <span
-                      className={`font-mono text-sm font-medium mt-0.5 transition-colors ${
-                        active === i ? "text-primary" : "text-muted-foreground"
-                      }`}
-                    >
-                      {step.num}
-                    </span>
-                    <div>
-                      <p
-                        className={`font-heading font-semibold transition-colors ${
-                          active === i ? "text-foreground" : "text-muted-foreground"
-                        }`}
-                      >
-                        {step.title}
-                      </p>
-                      <div
-                        className={`overflow-hidden transition-all duration-300 ${
-                          active === i ? "max-h-20 opacity-100 mt-2" : "max-h-0 opacity-0"
-                        }`}
-                      >
-                        <p className="text-sm text-muted-foreground">{step.desc}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </StarBorder>
-            ))}
-          </div>
-
-          {/* Visual panel */}
-          <div className="bg-card border border-border rounded-xl p-10 flex flex-col items-center justify-center min-h-[360px] transition-all duration-300">
-            <span className="text-6xl mb-6 block animate-float">
-              {steps[active].visual}
-            </span>
-            <p className="font-heading text-lg font-semibold mb-2">
-              {steps[active].title}
-            </p>
-            <p className="text-sm font-mono text-muted-foreground">
-              {steps[active].visualLabel}
-            </p>
-            <div className="mt-6 flex gap-1.5">
-              {steps.map((_, i) => (
-                <span
-                  key={i}
-                  className={`w-8 h-1 rounded-full transition-colors ${
-                    i === active ? "bg-primary" : "bg-border"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+        <Stepper
+          initialStep={1}
+          onStepChange={() => {}}
+          onFinalStepCompleted={() => {}}
+          backButtonText="Previous"
+          nextButtonText="Next Step"
+        >
+          {steps.map((step) => (
+            <Step key={step.num}>
+              <div className="text-center space-y-4">
+                <span className="text-6xl block">{step.visual}</span>
+                <p className="text-xs font-mono text-primary tracking-widest">
+                  STEP {step.num}
+                </p>
+                <h3 className="font-heading text-xl font-semibold text-foreground">
+                  {step.title}
+                </h3>
+                <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+                  {step.desc}
+                </p>
+                <p className="text-xs font-mono text-muted-foreground mt-2">
+                  {step.visualLabel}
+                </p>
+              </div>
+            </Step>
+          ))}
+        </Stepper>
       </div>
     </section>
   );
