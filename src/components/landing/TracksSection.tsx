@@ -48,9 +48,9 @@ export default function TracksSection() {
           {tracks.map((t) => (
             <ElectricBorder
               key={t.title}
-              color="hsl(160, 100%, 45%)"
-              speed={1}
-              chaos={0.08}
+              color="#ffffff"
+              speed={0.3}
+              chaos={0.04}
               borderRadius={20}
               className="group"
             >
