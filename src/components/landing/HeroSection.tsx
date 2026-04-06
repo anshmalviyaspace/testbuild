@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { lazy, Suspense } from "react";
+import SplitText from "@/components/SplitText";
 
 const Dither = lazy(() => import("@/components/Dither"));
 
 const stats = [
-{ value: "2,400+", label: "BUILDERS" },
-{ value: "180+", label: "PROJECTS SHIPPED" },
-{ value: "12", label: "COLLEGES" },
-{ value: "4", label: "TRACKS" }];
-
+  { value: "2,400+", label: "BUILDERS" },
+  { value: "180+", label: "PROJECTS SHIPPED" },
+  { value: "12", label: "COLLEGES" },
+  { value: "4", label: "TRACKS" },
+];
 
 export default function HeroSection() {
   return (
@@ -25,8 +26,8 @@ export default function HeroSection() {
             colorNum={4}
             waveAmplitude={0.3}
             waveFrequency={5}
-            waveSpeed={0.03} />
-          
+            waveSpeed={0.03}
+          />
         </Suspense>
       </div>
 
@@ -40,16 +41,46 @@ export default function HeroSection() {
         </div>
 
         {/* Headline */}
-        <h1 className="font-heading font-extrabold tracking-tight animate-fade-in-up opacity-0 stagger-1">
-          <span className="block text-5xl sm:text-6xl lg:text-7xl leading-[1.05]">
-            Don't just learn.
-          </span>
-          <span className="block text-6xl sm:text-7xl lg:text-[5.5rem] leading-[1.05] mt-2 text-gradient-primary">
-            BUILD.
-          </span>
-          <span className="block text-3xl sm:text-4xl lg:text-5xl leading-[1.1] mt-2 font-bold text-white">
-            while you learn.
-          </span>
+        <h1 className="font-heading font-extrabold tracking-tight">
+          <SplitText
+            text="Don't just learn."
+            className="block text-5xl sm:text-6xl lg:text-7xl leading-[1.05] text-foreground"
+            tag="span"
+            delay={60}
+            duration={0.8}
+            ease="power3.out"
+            splitType="chars"
+            from={{ opacity: 0, y: 50 }}
+            to={{ opacity: 1, y: 0 }}
+            threshold={0.1}
+            rootMargin="-50px"
+          />
+          <SplitText
+            text="BUILD."
+            className="block text-6xl sm:text-7xl lg:text-[5.5rem] leading-[1.05] mt-2 text-gradient-primary"
+            tag="span"
+            delay={80}
+            duration={1}
+            ease="power3.out"
+            splitType="chars"
+            from={{ opacity: 0, y: 60, scale: 0.8 }}
+            to={{ opacity: 1, y: 0, scale: 1 }}
+            threshold={0.1}
+            rootMargin="-50px"
+          />
+          <SplitText
+            text="while you learn."
+            className="block text-3xl sm:text-4xl lg:text-5xl leading-[1.1] mt-2 font-bold text-white"
+            tag="span"
+            delay={50}
+            duration={0.8}
+            ease="power3.out"
+            splitType="chars"
+            from={{ opacity: 0, y: 30 }}
+            to={{ opacity: 1, y: 0 }}
+            threshold={0.1}
+            rootMargin="-50px"
+          />
         </h1>
 
         {/* Subtext */}
@@ -62,30 +93,30 @@ export default function HeroSection() {
         <div className="mt-10 flex items-center justify-center gap-4 animate-fade-in-up opacity-0 stagger-4">
           <Link
             to="/signup"
-            className="inline-flex items-center gap-2 text-primary-foreground px-7 py-3.5 rounded-lg font-semibold transition-colors bg-white">
-            
+            className="inline-flex items-center gap-2 text-primary-foreground px-7 py-3.5 rounded-lg font-semibold transition-colors bg-white"
+          >
             Start Building <ArrowRight size={16} />
           </Link>
           <a
             href="#projects"
-            className="inline-flex items-center gap-2 border px-7 py-3.5 rounded-lg text-sm transition-colors text-white border-white">
-            
+            className="inline-flex items-center gap-2 border px-7 py-3.5 rounded-lg text-sm transition-colors text-white border-white"
+          >
             See Projects
           </a>
         </div>
 
         {/* Stats row */}
         <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl mx-auto animate-fade-in-up opacity-0 stagger-5">
-          {stats.map(({ value, label }) =>
-          <div key={label}>
+          {stats.map(({ value, label }) => (
+            <div key={label}>
               <p className="text-2xl font-heading font-bold">{value}</p>
               <p className="text-[10px] font-mono tracking-widest mt-1 text-white">
                 {label}
               </p>
             </div>
-          )}
+          ))}
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }
