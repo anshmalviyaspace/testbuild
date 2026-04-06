@@ -55,19 +55,9 @@ export default function HeroSection() {
             threshold={0.1}
             rootMargin="-50px"
           />
-          <SplitText
-            text="BUILD."
-            className="block text-6xl sm:text-7xl lg:text-[5.5rem] leading-[1.05] mt-2 text-gradient-primary"
-            tag="span"
-            delay={80}
-            duration={1}
-            ease="power3.out"
-            splitType="chars"
-            from={{ opacity: 0, y: 60, scale: 0.8 }}
-            to={{ opacity: 1, y: 0, scale: 1 }}
-            threshold={0.1}
-            rootMargin="-50px"
-          />
+          <span className="block text-6xl sm:text-7xl lg:text-[5.5rem] leading-[1.05] mt-2 text-gradient-primary animate-fade-in-up opacity-0 stagger-2">
+            BUILD.
+          </span>
           <SplitText
             text="while you learn."
             className="block text-3xl sm:text-4xl lg:text-5xl leading-[1.1] mt-2 font-bold text-white"
