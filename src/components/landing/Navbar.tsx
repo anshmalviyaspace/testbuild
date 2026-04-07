@@ -41,15 +41,17 @@ export default function Navbar() {
 
         {/* Desktop nav links */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map(({ label, href }) => (
-            <a
-              key={label}
-              href={href}
-              className="text-sm transition-colors text-white"
-            >
-              {label}
-            </a>
-          ))}
+          {navLinks.map(({ label, href, isRoute }) =>
+            isRoute ? (
+              <Link key={label} to={href} className="text-sm transition-colors text-white">
+                {label}
+              </Link>
+            ) : (
+              <a key={label} href={href} className="text-sm transition-colors text-white">
+                {label}
+              </a>
+            )
+          )}
         </nav>
 
         {/* Desktop CTA */}
