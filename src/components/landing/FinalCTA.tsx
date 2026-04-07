@@ -1,10 +1,22 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import GridScan from "@/components/GridScan";
 
 export default function FinalCTA() {
   return (
     <section className="py-24 border-t border-border relative overflow-hidden">
-      <div className="absolute inset-0 bg-radial-glow-strong" />
+      <GridScan
+        sensitivity={0.55}
+        lineThickness={1}
+        linesColor="#392e4e"
+        gridScale={0.1}
+        scanColor="#FF9FFC"
+        scanOpacity={0.4}
+        enablePost
+        bloomIntensity={0.6}
+        chromaticAberration={0.002}
+        noiseIntensity={0.01}
+      />
       <div className="container relative z-10 text-center max-w-2xl mx-auto">
         <h2 className="font-heading text-4xl sm:text-5xl font-extrabold mb-4 text-balance">
           Your portfolio starts today.
