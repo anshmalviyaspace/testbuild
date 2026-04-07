@@ -6,16 +6,16 @@ export default function FinalCTA() {
   return (
     <section className="py-24 border-t border-border relative overflow-hidden">
       <GridScan
-        sensitivity={0}
+        sensitivity={0.55}
         lineThickness={1}
-        linesColor="#0a1628"
+        linesColor="#392e4e"
         gridScale={0.1}
-        scanColor="#1e3a5f"
-        scanOpacity={0.5}
+        scanColor="#FF9FFC"
+        scanOpacity={0.4}
         enablePost
-        bloomIntensity={0.4}
-        chromaticAberration={0.001}
-        noiseIntensity={0.008}
+        bloomIntensity={0.6}
+        chromaticAberration={0.002}
+        noiseIntensity={0.01}
       />
       <div className="container relative z-10 text-center max-w-2xl mx-auto">
         <h2 className="font-heading text-4xl sm:text-5xl font-extrabold mb-4 text-balance">
