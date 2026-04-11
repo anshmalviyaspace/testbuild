@@ -139,4 +139,8 @@
   button:hover:not(:disabled), a[class*="bg-primary"]:hover {
     transform: translateY(-1px);
   }
+  /* Globally hide the Lovable badge */
+#lovable-badge {
+  display: none !important;
+}
 }
