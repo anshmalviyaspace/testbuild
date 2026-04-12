@@ -2,6 +2,13 @@ import { CheckCircle2, PlayCircle, Lock } from "lucide-react";
 import clsx from "clsx";
 import type { Module } from "@/data/trackData";
 
+const TRACK_META: Record<string, { emoji: string; difficulty: string }> = {
+  "AI & Machine Learning": { emoji: "🤖", difficulty: "Beginner Friendly" },
+  "UI/UX Design":          { emoji: "🎨", difficulty: "Visual" },
+  "Full Stack Dev":        { emoji: "💻", difficulty: "Intermediate" },
+  "Build a Startup":       { emoji: "🚀", difficulty: "Advanced" },
+};
+
 interface Props {
   modules: Module[];
   activeModuleId: number;
@@ -9,6 +16,7 @@ interface Props {
   totalXp: number;
   totalPossibleXp: number;
   progressPercent: number;
+  track: string;
   onModuleClick: (mod: Module) => void;
 }
 
@@ -19,18 +27,21 @@ export default function TrackSidebar({
   totalXp,
   totalPossibleXp,
   progressPercent,
+  track,
   onModuleClick,
 }: Props) {
+  const meta = TRACK_META[track] ?? { emoji: "🚀", difficulty: "Self-paced" };
+
   return (
     <div className="w-full lg:w-[400px] shrink-0 border-r border-border bg-surface overflow-y-auto p-6 space-y-6">
       {/* Track header */}
       <div>
         <h1 className="font-heading text-xl font-extrabold flex items-center gap-2">
-          <span className="text-2xl">🤖</span> AI & Machine Learning
+          <span className="text-2xl">{meta.emoji}</span> {track}
         </h1>
         <div className="flex items-center gap-2 mt-2">
           <span className="text-[10px] font-mono bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-            Beginner Friendly
+            {meta.difficulty}
           </span>
           <span className="text-xs font-mono text-muted-foreground">
             {completedCount} of {modules.length} modules complete
@@ -60,11 +71,9 @@ export default function TrackSidebar({
               key={mod.id}
               onClick={() => onModuleClick(mod)}
               className={clsx(
-                "w-full text-left rounded-lg p-3.5 transition-all duration-200 group",
-                isActive
-                  ? "bg-surface2 ring-1 ring-border"
-                  : "hover:bg-surface2/60",
-                mod.status === "locked" && "opacity-60"
+                "w-full text-left rounded-lg p-3.5 transition-all duration-200",
+                isActive ? "bg-surface2 ring-1 ring-border" : "hover:bg-surface2/60",
+                mod.status === "locked" && "opacity-60 cursor-not-allowed"
               )}
             >
               <div className="flex items-start gap-3">
@@ -107,17 +116,17 @@ export default function TrackSidebar({
                     )}
                     {mod.status === "in-progress" && (
                       <>
-                        <span className="text-[10px] font-mono text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+                        <span className="text-[10px] font-mono text-warning bg-warning/10 px-1.5 py-0.5 rounded">
                           ▶ In Progress
                         </span>
                         <span className="text-[10px] font-mono text-primary">
-                          Continue →
+                          +{mod.xp} XP
                         </span>
                       </>
                     )}
                     {mod.status === "locked" && (
                       <span className="text-[10px] font-mono text-muted-foreground/50 bg-surface2 px-1.5 py-0.5 rounded">
-                        🔒 Locked
+                        🔒 Locked · +{mod.xp} XP
                       </span>
                     )}
                   </div>
